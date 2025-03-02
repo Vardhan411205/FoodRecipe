@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mr.Foody & Ms.Foody - Recipe Finder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-logo">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" style="width: 260px; height: 260px;border-radius: 50%;">
+        </div>
+        <div class="loading-text">
+            <span class="mr">Mr.Foody</span>
+            <span class="and">&</span>
+            <span class="ms">Ms.Foody</span>
+        </div>
+    </div>
+
+    <!-- Top Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="nav-logo">
+                <span class="brand-text">Mr.Foody & Ms.Foody</span>
+            </div>
+            <a href="https://mr-foodyandms-foody.onrender.com" class="visit-website-btn">
+                <i class="fas fa-external-link-alt"></i>
+                Visit our Website
+            </a>
+        </div>
+    </nav>
+
+    <div class="hero-section">
+        <div class="container">
+            <h1>Discover Amazing Recipes</h1>
+            <p class="subtitle">Search from thousands of delicious recipes</p>
+            
+            <form method="GET" class="search-form">
+                <div class="search-container">
+                    <input type="text" name="query" placeholder="Search for recipes..." 
+                           value="{{ query if query else '' }}">
+                    <button type="submit"><i class="fas fa-search"></i> Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <div class="container">
+            {% if error %}
+            <div class="error-message">
+                <p>{{ error }}</p>
+            </div>
+            {% endif %}
+
+            {% if recipes %}
+            <div class="recipes-grid">
+                {% for recipe in recipes %}
+                <div class="recipe-card" data-index="{{ loop.index0 }}">
+                    <div class="recipe-layout">
+                        <div class="recipe-left">
+                            <div class="recipe-header">
+                                <h2>{{ recipe.title }}</h2>
+                            </div>
+                            <div class="recipe-image">
+                                <img 
+                                    src="https://image.pollinations.ai/prompt/{{ recipe.title|urlencode }}%20food%20photo%20realistic%204k%20detailed"
+                                    alt="{{ recipe.title }}"
+                                    onerror="this.onerror=null; this.src='/static/img/default-food.jpg';"
+                                >
+                            </div>
+                            <div class="recipe-instructions">
+                                <h3><i class="fas fa-utensils"></i> Instructions</h3>
+                                <p>{{ recipe.instructions }}</p>
+                            </div>
+                        </div>
+                        <div class="recipe-right">
+                            <div class="ingredients-section">
+                                <h3><i class="fas fa-list"></i> Ingredients</h3>
+                                <ul>
+                                    {% for ingredient in recipe.ingredients.split('|') %}
+                                    <li>{{ ingredient }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Replace the Load More section with pagination controls -->
+            <div class="pagination-controls">
+                {% if page > 1 %}
+                <a href="{{ url_for('index', query=query, page=page-1) }}" class="pagination-btn prev-btn">
+                    <i class="fas fa-chevron-left"></i> Previous
+                </a>
+                {% endif %}
+                
+                <div class="page-info">
+                    Page {{ page }} of {{ (total_recipes / 5)|round(method='ceil')|int }}
+                </div>
+                
+                {% if has_more %}
+                <a href="{{ url_for('index', query=query, page=page+1) }}" class="pagination-btn next-btn">
+                    Next <i class="fas fa-chevron-right"></i>
+                </a>
+                {% endif %}
+            </div>
+
+            <div class="results-count">
+                Showing {{ (page-1)*5 + 1 }}-{{ [page*5, total_recipes]|min }} of {{ total_recipes }} recipes
+            </div>
+            {% else %}
+            <div class="no-search">
+                <i class="fas fa-search fa-3x"></i>
+                <p>Enter a keyword to find recipes</p>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2024 Mr.Foody & Ms.Foody. Powered by API Ninjas</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add animation delays to recipe cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.recipe-card');
+            cards.forEach(card => {
+                const index = card.dataset.index;
+                card.style.animationDelay = `${index * 0.2}s`;
+            });
+        });
+
+        // Updated loading screen animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingScreen = document.getElementById('loading-screen');
+            
+            // Force close loading screen after 3 seconds
+            setTimeout(function() {
+                loadingScreen.style.opacity = '0';
+                loadingScreen.style.transition = 'opacity 0.5s ease';
+                
+                // Remove loading screen from DOM after fade out
+                setTimeout(function() {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }, 3000);
+        });
+    </script>
+</body>
+</html> 
