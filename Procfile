@@ -1,1 +1,1 @@
-web: gunicorn 'recipe.app:app' 
+web: gunicorn --bind localhost:8000 'app:app' 

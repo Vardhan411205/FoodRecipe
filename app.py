@@ -9,8 +9,7 @@ import time
 load_dotenv()
 
 app = Flask(__name__)
-API_KEY = os.getenv('API_NINJA_KEY')
-POLLINATION_KEY = os.getenv('POLLINATION_KEY')  # Add this to your .env file
+API_KEY = os.getenv('API_NINJA_KEY')  # Only need API Ninjas key
 
 def generate_food_image(recipe_name):
     try:
@@ -62,4 +61,4 @@ def index():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run() 
+    app.run(host='localhost', port=8000, debug=True) 
