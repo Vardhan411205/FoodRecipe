@@ -607,24 +607,61 @@ body {
 /* Add styles for smaller phones */
 @media (max-width: 480px) {
     .navbar {
-        min-height: 70px;
+        min-height: 60px;
+        padding: 10px 0;
+        height: auto;
     }
 
+    .nav-container {
+        flex-direction: column;
+        gap: 8px;
+        padding: 5px 10px;
+    }
+
+    .nav-brand {
+        flex-direction: row;  /* Changed to row for better alignment */
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 5px;
+    }
+
+    .nav-logo {
+        width: 40px;  /* Reduced size */
+        height: 40px;
+    }
+
+    .brand-text {
+        font-size: 24px;  /* Smaller font size */
+    }
+
+    .visit-website-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 8px 15px;
+        font-size: 14px;
+        border-radius: 20px;
+    }
+
+    /* Adjust hero section to account for new nav height */
     .hero-section {
-        padding-top: 130px;
+        padding-top: 110px;  /* Reduced padding */
     }
 
     .hero-section h1 {
         font-size: 2rem;
+        margin-top: 80px;
+        padding: 0 15px;
+    }
+
+    .subtitle {
+        font-size: 0.9rem;
+        padding: 0 20px;
+        margin-bottom: 20px;
     }
 
     .recipe-image {
         height: 200px;
-    }
-
-    .nav-brand {
-        flex-direction: column;
-        text-align: center;
     }
 
     .recipe-card {
